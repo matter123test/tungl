@@ -7,7 +7,7 @@
 #include "Event.h"
 
 namespace tg {
-	class InputHandler {
+	class EventHandler {
 	public:
 		void init(GLFWwindow* handle);
 
@@ -31,5 +31,6 @@ namespace tg {
 	
 		// Callbacks
 		static void keyCallback(GLFWwindow* handle, int keyCode, int scancode, int action, int mods);
+		static void framebufferSizeCallback(GLFWwindow* handle, int width, int height);
 	};
 }

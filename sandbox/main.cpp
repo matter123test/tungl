@@ -13,6 +13,11 @@ int main() {
 		window.input().process();
 
 		while (std::optional event = window.input().pollEvent()) {
+			if (auto windowResizeEvent = event->getIf<tg::Event::WindowResized>()) {
+				window.setSize(windowResizeEvent->width, windowResizeEvent->height);
+				renderer.resizeViewport();
+			}
+			
 			if (auto keyEvent = event->getIf<tg::Event::KeyPressed>()) {
 				if (keyEvent->keycode == tg::Key::Escape) {
 					window.close();

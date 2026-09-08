@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 #include <string>
-#include "input/InputHandler.h"
+#include "input/EventHandler.h"
 
 namespace tg {
 	class Window {
@@ -10,15 +10,21 @@ namespace tg {
 		Window(const std::string &title, int width, int height);
 		~Window();
 
-		GLFWwindow* getHandle() { return m_handle; }
-
 		bool isOpen();
 		void close();
-
-		InputHandler& input() { return m_inputHandler; }
-
-		void setPos(int x, int y);
+		EventHandler& input() { return m_inputHandler; }
 		void center();
+
+		// Getters
+		GLFWwindow* getHandle() { return m_handle; }
+		int getWidth() const { return m_width; }
+		int getHeight() const { return m_height; }
+
+		// Setters
+		void setPos(int x, int y);
+		void setSize(int width, int height) { m_width = width; m_height = height; }
+		void setWidth(int value) { m_width = value; }
+		void setHeight(int value) { m_height = value; }
 
 	private:
 		std::string m_title;
@@ -28,6 +34,6 @@ namespace tg {
 		GLFWwindow* m_handle = nullptr;
 		GLFWmonitor* m_monitor = nullptr;
 
-		InputHandler m_inputHandler;
+		EventHandler m_inputHandler;
 	};
 }

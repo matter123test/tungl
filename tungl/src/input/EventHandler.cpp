@@ -1,21 +1,23 @@
-#include "input/InputHandler.h"
+#include "input/EventHandler.h"
+#include <spdlog/spdlog.h>
 
 namespace tg {
-	void InputHandler::init(GLFWwindow* handle) {
+	void EventHandler::init(GLFWwindow* handle) {
 		glfwSetWindowUserPointer(handle, this);
-		glfwSetKeyCallback(handle, InputHandler::keyCallback);
+		glfwSetKeyCallback(handle, EventHandler::keyCallback);
+		glfwSetFramebufferSizeCallback(handle, EventHandler::framebufferSizeCallback);
 	}
 
-	void InputHandler::process()
+	void EventHandler::process()
 	{
 		glfwPollEvents();
 	}
 
-	void InputHandler::update() {
+	void EventHandler::update() {
 		m_previousKeys = m_currentKeys;
 	}
 
-	std::optional<Event> InputHandler::pollEvent()
+	std::optional<Event> EventHandler::pollEvent()
 	{
 		if (m_events.empty()) return std::nullopt;
 
@@ -25,15 +27,15 @@ namespace tg {
 		return std::make_optional(event);
 	}
 
-	void InputHandler::keyCallback(GLFWwindow* handle, int keyCode, int scancode, int action, int mods) {
-		auto inputHandler = static_cast<InputHandler*>(glfwGetWindowUserPointer(handle));
+	void EventHandler::keyCallback(GLFWwindow* handle, int keyCode, int scancode, int action, int mods) {
+		auto inputHandler = static_cast<EventHandler*>(glfwGetWindowUserPointer(handle));
 
 		if (!inputHandler) return;
 
 		Key key = KeyFromGlfwKey(keyCode);
 
 		if (action == GLFW_PRESS) {
-			inputHandler->m_events.push_back(
+			inputHandler->m_events.push_front(
 				Event(Event::KeyPressed(key))
 			);
 
@@ -41,7 +43,7 @@ namespace tg {
 		}
 
 		if (action == GLFW_RELEASE) {
-			inputHandler->m_events.push_back(
+			inputHandler->m_events.push_front(
 				Event(Event::KeyReleased(key))
 			);
 
@@ -49,7 +51,22 @@ namespace tg {
 		}
 	}
 
-	bool InputHandler::isKeyDown(Key key) {
+	void EventHandler::framebufferSizeCallback(GLFWwindow* handle, int width, int height)
+	{
+		auto inputHandler = static_cast<EventHandler*>(glfwGetWindowUserPointer(handle));
+
+		if (!inputHandler) return;
+
+		if (width > 0 && height > 0) {
+			inputHandler->m_events.push_front(
+				Event(Event::WindowResized(width, height))
+			);
+
+			spdlog::info("Window resize callback W: {} H: {}", width, height);
+		}
+	}
+
+	bool EventHandler::isKeyDown(Key key) {
 		auto search = m_currentKeys.find(key);
 
 		if (search != m_currentKeys.end()) {
@@ -59,7 +76,7 @@ namespace tg {
 		return false;
 	}
 
-	bool InputHandler::isKeyPressed(Key key) {
+	bool EventHandler::isKeyPressed(Key key) {
 		auto searchCurrent = m_currentKeys.find(key);
 		if (searchCurrent == m_currentKeys.end()) return false;
 
@@ -73,7 +90,7 @@ namespace tg {
 		return false;
 	}
 
-	bool InputHandler::isKeyReleased(Key key) {
+	bool EventHandler::isKeyReleased(Key key) {
 		auto search = m_currentKeys.find(key);
 
 		if (search != m_currentKeys.end()) {

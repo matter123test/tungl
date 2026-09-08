@@ -11,8 +11,14 @@ namespace tg {
 
 		void swapBuffers();
 
-	private:
-		Window* m_window;
+		// Resize the viewport to match the window dimensions
+		void resizeViewport();
 
+	private:
+		// Viewport size
+		int m_width;
+		int m_height;
+
+		Window* m_window;
 	};
 }

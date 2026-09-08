@@ -9,6 +9,7 @@ namespace tg {
 		template<typename EventType>
 		Event(EventType type) : m_type(type) {}
 
+		// --- Events ---
 		struct KeyPressed {
 			Key keycode;
 		};
@@ -18,15 +19,22 @@ namespace tg {
 		};
 
 		struct WindowResized {
-
+			int width;
+			int height;
 		};
+		// --- Events ---
 
 		template<typename EventType>
 		constexpr static bool isValidEventType() {
-			return  std::same_as<EventType, KeyPressed> ||
-					std::same_as<EventType, KeyReleased>;
+			return  std::same_as<EventType, KeyPressed>  ||
+					std::same_as<EventType, KeyReleased> ||
+					std::same_as<EventType, WindowResized>;
 		}
 
+	private:
+		std::variant<KeyPressed, KeyReleased, WindowResized> m_type;
+
+	public:
 		template <typename EventType>
 		bool is() const {
 			static_assert(isValidEventType<EventType>(), "Invalid EventType");
@@ -45,7 +53,5 @@ namespace tg {
 			return nullptr;
 		}
 
-	private:
-		std::variant<KeyPressed, KeyReleased> m_type;
 	};
 }
