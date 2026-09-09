@@ -7,6 +7,8 @@
 namespace tg {
 	Shader::Shader(const std::string& vertexShaderFilePath, const std::string fragmentShaderFilePath)
 	{
+		tg::printHeader("Shader Creation");
+
 		auto vertexShaderSource = FileReader::getAllText(vertexShaderFilePath);
 		auto fragmentShaderSource = FileReader::getAllText(fragmentShaderFilePath);
 
@@ -42,7 +44,9 @@ namespace tg {
 		glDeleteShader(vertexShaderId);
 		glDeleteShader(fragmentShaderId);
 
-		spdlog::info("Initialized shader id: {}", m_programId);
+		spdlog::info("Created shader id: {}", m_programId);
+		
+		tg::printFooter("Shader Creation");
 	}
 
 	Shader::~Shader()
