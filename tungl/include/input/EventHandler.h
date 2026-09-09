@@ -4,6 +4,8 @@
 #include <optional>
 #include <unordered_map>
 #include <deque>
+#include <vector>
+#include <functional>
 #include "Event.h"
 
 namespace tg {

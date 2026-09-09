@@ -17,6 +17,9 @@ namespace tg {
 #endif // _DEBUG
 		
 		spdlog::info("Created renderer");
+
+		// Set viewport
+		resizeViewport();
 	}
 
 	Renderer::~Renderer()

@@ -88,7 +88,7 @@ namespace tg {
 
 		case GL_DEBUG_SEVERITY_NOTIFICATION:
 			_severity = "NOTIFICATION";
-			break;
+			return; // Suppress notifications
 
 		default:
 			_severity = "UNKNOWN";

@@ -1,4 +1,5 @@
 find_package(glfw3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 file(GLOB_RECURSE "SOURCE_FILES" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
@@ -16,6 +17,5 @@ target_include_directories(tungl PUBLIC
 	"${GLAD_DIR}/include/"
 )
 
-target_link_libraries(tungl PUBLIC glfw spdlog::spdlog_header_only)
+target_link_libraries(tungl PUBLIC glfw spdlog::spdlog_header_only glm::glm)
 target_compile_definitions(tungl PUBLIC GLFW_INCLUDE_NONE)
-
