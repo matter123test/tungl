@@ -6,6 +6,9 @@
 #include "Window.h"
 #include "graphics/Renderer.h"
 #include "graphics/Shaders/Shader.h"
+#include "graphics/Buffers/VertexArray.h"
+#include "graphics/Buffers/VertexBuffer.h"
+#include "graphics/Buffers/VertexBufferLayout.h"
 
 int main() {
 	tg::Window window("test", 500, 500); window.center();
@@ -13,23 +16,23 @@ int main() {
 
 	tg::Shader basicShader("shaders/vertex.glsl", "shaders/fragment.glsl");
 
-	std::array<GLfloat, 9> vertices = {
-		 0.0f,  0.5f,  0.0f,
-		 0.5f, -0.5f,  0.0f,
-		-0.5f, -0.5f,  0.0f
+	std::vector<GLfloat> vertices = {
+		 0.0f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f
 	};
 
-	GLuint VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	tg::VertexArray vao;
+	tg::VertexBuffer vbo(vertices);
 
-	GLuint VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+	GLsizei stride = sizeof(GLfloat) * 6;
+	tg::VertexBufferLayout layout({
+		{ tg::VertexAttributeType::Float3, stride },
+		{ tg::VertexAttributeType::Float3, stride }
+	});
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, nullptr);
+	vao.unbind();
+	vbo.unbind();
 
 	while (window.isOpen()) {
 		window.input().process();
@@ -57,14 +60,11 @@ int main() {
 
 		basicShader.use();
 
-		glBindVertexArray(VAO);
+		vao.bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		renderer.swapBuffers();
 	}
-
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
 
 	return 0;
 }

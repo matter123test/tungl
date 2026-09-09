@@ -27,9 +27,12 @@ namespace tg {
 			return;
 		}
 		spdlog::info("Created GLFW window");
+		
+		// Window settings
+		glfwSwapInterval(1);
+
 
 		m_inputHandler.init(m_handle);
-
 		m_monitor = glfwGetPrimaryMonitor();
 	}
 

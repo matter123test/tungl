@@ -3,9 +3,16 @@
 #include <glad/glad.h>
 
 #ifdef _DEBUG
+
 #define DEBUG_ONLY(x) x
+
+#define TG_ASSERT(x) if (x) __debugbreak();
+
 #else
+
 #define DEBUG_ONLY(x) ;
+#define TG_ASSERT(x) ;
+
 #endif
 
 namespace tg {
