@@ -28,11 +28,15 @@ namespace tg {
 	private:
 		std::deque<Event> m_events;
 
+		inline void addEvent(const Event& event) { m_events.push_front(event); }
+		inline void setKey(const Key& key, bool value) { m_currentKeys.insert_or_assign(key, value); }
+
 		std::unordered_map<Key, bool> m_previousKeys{};
 		std::unordered_map<Key, bool> m_currentKeys{};
 	
 		// Callbacks
 		static void keyCallback(GLFWwindow* handle, int keyCode, int scancode, int action, int mods);
 		static void framebufferSizeCallback(GLFWwindow* handle, int width, int height);
+		static void cursorPosCallback(GLFWwindow* handle, double xpos, double ypos);
 	};
 }

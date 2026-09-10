@@ -6,6 +6,7 @@ namespace tg {
 		glfwSetWindowUserPointer(handle, this);
 		glfwSetKeyCallback(handle, EventHandler::keyCallback);
 		glfwSetFramebufferSizeCallback(handle, EventHandler::framebufferSizeCallback);
+		glfwSetCursorPosCallback(handle, EventHandler::cursorPosCallback);
 	}
 
 	void EventHandler::process()
@@ -35,19 +36,19 @@ namespace tg {
 		Key key = KeyFromGlfwKey(keyCode);
 
 		if (action == GLFW_PRESS) {
-			inputHandler->m_events.push_front(
+			inputHandler->addEvent(
 				Event(Event::KeyPressed(key))
 			);
 
-			inputHandler->m_currentKeys.insert_or_assign(key, true);
+			inputHandler->setKey(key, true);
 		}
 
 		if (action == GLFW_RELEASE) {
-			inputHandler->m_events.push_front(
+			inputHandler->addEvent(
 				Event(Event::KeyReleased(key))
 			);
 
-			inputHandler->m_currentKeys.insert_or_assign(key, false);
+			inputHandler->setKey(key, false);
 		}
 	}
 
@@ -58,12 +59,21 @@ namespace tg {
 		if (!inputHandler) return;
 
 		if (width > 0 && height > 0) {
-			inputHandler->m_events.push_front(
+			inputHandler->addEvent(
 				Event(Event::WindowResized(width, height))
 			);
 
 			spdlog::info("Window resize callback W: {} H: {}", width, height);
 		}
+	}
+
+	void EventHandler::cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
+	{
+		auto inputHandler = static_cast<EventHandler*>(glfwGetWindowUserPointer(handle));
+
+		if (!inputHandler) return;
+
+		inputHandler->addEvent(Event(Event::MouseMoved(xpos, ypos)));
 	}
 
 	bool EventHandler::isKeyDown(Key key) {

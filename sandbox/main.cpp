@@ -9,6 +9,8 @@
 #include "graphics/Buffers/Buffers.h"
 #include "gui/DebugUI.h"
 
+#include <utility>
+
 int main() {
 	tg::Window window("tungl", 1200, 900); window.center();
 	tg::Renderer renderer(&window);
@@ -113,6 +115,7 @@ int main() {
 
 		// Render here
 		glClear(GL_COLOR_BUFFER_BIT);
+
 		basicShader.use();
 
 		basicShader.setMat4("projection", projection);

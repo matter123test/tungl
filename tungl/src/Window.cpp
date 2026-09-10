@@ -1,7 +1,6 @@
 #include "Window.h"
 #include <spdlog/spdlog.h>
 
-
 namespace tg {
 	Window::Window(const std::string& title, int width, int height) :
 		m_title(title), m_width(width), m_height(height)
@@ -27,13 +26,12 @@ namespace tg {
 			return;
 		}
 		spdlog::info("Created GLFW window");
-		
-		// Window settings
-		glfwSwapInterval(1);
-
 
 		m_inputHandler.init(m_handle);
 		m_monitor = glfwGetPrimaryMonitor();
+
+		// Window settings
+		glfwSwapInterval(1);
 	}
 
 	Window::~Window()

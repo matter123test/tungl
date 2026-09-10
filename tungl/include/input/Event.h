@@ -22,17 +22,25 @@ namespace tg {
 			int width;
 			int height;
 		};
+
+		struct MouseMoved {
+			double x;
+			double y;
+		};
+
+#define EVENT_TYPES KeyPressed, KeyReleased, WindowResized, MouseMoved
 		// --- Events ---
+
+		template<class T, class... Ts>
+		constexpr static bool is_one_of_v = (std::is_same_v<T, Ts> || ...);
 
 		template<typename EventType>
 		constexpr static bool isValidEventType() {
-			return  std::same_as<EventType, KeyPressed>  ||
-					std::same_as<EventType, KeyReleased> ||
-					std::same_as<EventType, WindowResized>;
+			return is_one_of_v<EventType, EVENT_TYPES>;
 		}
 
 	private:
-		std::variant<KeyPressed, KeyReleased, WindowResized> m_type;
+		std::variant<EVENT_TYPES> m_type;
 
 	public:
 		template <typename EventType>
@@ -52,6 +60,5 @@ namespace tg {
 
 			return nullptr;
 		}
-
 	};
 }
