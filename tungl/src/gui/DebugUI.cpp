@@ -48,9 +48,9 @@ namespace tg {
 			ImGui::Begin("Test", nullptr, ImGuiWindowFlags_NoDecoration);
 
 			ImGui::Text(std::format("Frametime: {:.2f}ms", stats.frametimeMs).c_str());
-			ImGui::Text(std::format("Camera X: {:.2f} Y: {:.2f} Z: {:.2f}", stats.cameraPos.x, stats.cameraPos.y, stats.cameraPos.z).c_str());
-			ImGui::Text(std::format("Target X: {:.2f} Y: {:.2f} Z: {:.2f}", stats.cameraFront.x, stats.cameraFront.y, stats.cameraFront.z).c_str());
-			ImGui::Text(std::format("FPS: {}", stats.fps).c_str());
+			//ImGui::Text(std::format("Camera X: {:.2f} Y: {:.2f} Z: {:.2f}", stats.cameraPos.x, stats.cameraPos.y, stats.cameraPos.z).c_str());
+			//ImGui::Text(std::format("Target X: {:.2f} Y: {:.2f} Z: {:.2f}", stats.cameraFront.x, stats.cameraFront.y, stats.cameraFront.z).c_str());
+			//ImGui::Text(std::format("FPS: {}", stats.fps).c_str());
 			
 			ImGui::End();
 		}

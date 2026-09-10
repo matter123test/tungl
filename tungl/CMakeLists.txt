@@ -40,5 +40,5 @@ target_include_directories(tungl PUBLIC
 	"${IMGUI_DIR}/misc/cpp"
 )
 
-target_link_libraries(tungl PUBLIC glfw spdlog::spdlog_header_only glm::glm)
+target_link_libraries(tungl PUBLIC winmm glfw spdlog::spdlog_header_only glm::glm)
 target_compile_definitions(tungl PUBLIC GLFW_INCLUDE_NONE)

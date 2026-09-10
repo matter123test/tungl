@@ -2,14 +2,13 @@
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
 #include <array>
+#include <chrono>
 
 #include "Window.h"
 #include "graphics/Renderer.h"
 #include "graphics/Shaders/Shader.h"
 #include "graphics/Buffers/Buffers.h"
 #include "gui/DebugUI.h"
-
-#include <utility>
 
 int main() {
 	tg::Window window("tungl", 1200, 900); window.center();
@@ -80,8 +79,14 @@ int main() {
 	);
 
 	glm::mat4 view(1.0f);
-	glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(50, 50, 0));
+
+	glm::vec3 position(0.0f);
+	glm::mat4 model = glm::translate(glm::mat4(1.0), position);
 	model = glm::scale(model, glm::vec3(100, 100, 1));
+
+	bool isWireframe = false;
+
+	std::chrono::steady_clock::time_point start, end;
 
 	while (window.isOpen()) {
 		window.input().process();
@@ -105,16 +110,35 @@ int main() {
 					window.close();
 				}
 			}
+
+			if (auto mouseEvent = event->getIf<tg::Event::MouseMoved>()) {
+				position.x = mouseEvent->x;
+				position.y = mouseEvent->y;
+				model = glm::translate(glm::mat4(1.0), position);
+				model = glm::scale(model, glm::vec3(100, 100, 1));
+			}
 		}
 
 		// Process input here
 		debugUI.processKeyEvents(&window);
+
+		if (window.input().isKeyPressed(tg::Key::O)) {
+			isWireframe = !isWireframe;
+
+			if (isWireframe) {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			}
+			else {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			}
+		}
 
 		window.input().update();
 
 		// Update here
 
 		// Render here
+		start = std::chrono::steady_clock::now();
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		basicShader.use();
@@ -127,6 +151,10 @@ int main() {
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)0);
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		end = std::chrono::steady_clock::now();
+
+		// Update debug info
+		debugInfo.frametimeMs = std::chrono::duration<double, std::milli>(end - start).count();
 		debugUI.draw(debugInfo);
 
 		renderer.swapBuffers();

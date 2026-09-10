@@ -1,10 +1,16 @@
 #include "Window.h"
 #include <spdlog/spdlog.h>
 
+#ifdef _WIN32
+#include <timeapi.h>
+#endif // _WIN32
+
 namespace tg {
 	Window::Window(const std::string& title, int width, int height) :
 		m_title(title), m_width(width), m_height(height)
 	{
+		timeBeginPeriod(1); // TODO
+
 		if (!glfwInit()) {
 			spdlog::error("Failed to initialize GLFW");
 			return;
@@ -43,6 +49,8 @@ namespace tg {
 
 		glfwTerminate();
 		spdlog::info("Terminated GLFW");
+
+		timeEndPeriod(1);
 	}
 
 	bool Window::isOpen()
