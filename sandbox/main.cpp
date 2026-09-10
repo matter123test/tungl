@@ -91,6 +91,7 @@ int main() {
 				window.setSize(windowResizeEvent->width, windowResizeEvent->height);
 				renderer.resizeViewport();
 
+				// Update projection to match the resized window
 				projection = glm::ortho(
 					static_cast<float>(0),
 					static_cast<float>(window.getWidth()),
