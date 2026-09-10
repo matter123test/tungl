@@ -7,6 +7,7 @@ namespace tg {
 		A,
 		S,
 		D,
+		I,
 		Escape
 	};
 

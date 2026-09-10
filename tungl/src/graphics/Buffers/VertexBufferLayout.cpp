@@ -19,7 +19,7 @@ namespace tg {
 			(GLvoid*)m_offset
 		);
 
-		m_currentLocation++;
+		m_currentLocation += 1;
 		m_offset += VertexAttributeTypeSize(element.type);
 	}
 
@@ -36,6 +36,11 @@ namespace tg {
 		case VertexAttributeType::Float2: return 4 * 2;
 		case VertexAttributeType::Float3: return 4 * 3;
 		case VertexAttributeType::Float4: return 4 * 4;
+
+		case VertexAttributeType::UByte:  return 1 * 1;
+		case VertexAttributeType::UByte2: return 1 * 2;
+		case VertexAttributeType::UByte3: return 1 * 3;
+		case VertexAttributeType::UByte4: return 1 * 4;
 
 		default: __debugbreak();
 		}
@@ -54,6 +59,11 @@ namespace tg {
 		case VertexAttributeType::Float3: return 3;
 		case VertexAttributeType::Float4: return 4;
 
+		case VertexAttributeType::UByte:  return 1;
+		case VertexAttributeType::UByte2: return 2;
+		case VertexAttributeType::UByte3: return 3;
+		case VertexAttributeType::UByte4: return 4;
+
 		default: __debugbreak();
 		}
 	}
@@ -70,6 +80,11 @@ namespace tg {
 		case VertexAttributeType::Float2: return GL_FLOAT;
 		case VertexAttributeType::Float3: return GL_FLOAT;
 		case VertexAttributeType::Float4: return GL_FLOAT;
+
+		case VertexAttributeType::UByte:  return GL_UNSIGNED_BYTE;
+		case VertexAttributeType::UByte2: return GL_UNSIGNED_BYTE;
+		case VertexAttributeType::UByte3: return GL_UNSIGNED_BYTE;
+		case VertexAttributeType::UByte4: return GL_UNSIGNED_BYTE;
 
 		default: __debugbreak();
 		}

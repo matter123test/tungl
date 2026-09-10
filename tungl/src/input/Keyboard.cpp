@@ -10,6 +10,7 @@ namespace tg {
 			case GLFW_KEY_S: return Key::S;
 			case GLFW_KEY_D: return Key::D;
 			case GLFW_KEY_ESCAPE: return Key::Escape;
+			case GLFW_KEY_I: return Key::I;
 
 			default: return Key::None;
 		}
