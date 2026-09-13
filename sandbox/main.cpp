@@ -9,21 +9,21 @@
 #include "graphics/Shaders/Shader.h"
 #include "graphics/Buffers/Buffers.h"
 #include "gui/DebugUI.h"
+#include "graphics/Mesh/Mesh.h"
+#include "game/Camera/Camera3D.h"
 
 int main() {
 	tg::Window window("tungl", 1200, 900); window.center();
 	tg::Renderer renderer(&window);
 
+	window.setCursorAtCenter();
+	bool cursorHidden = true;
+	window.setCursorHidden(cursorHidden);
+
 	tg::DebugInfo debugInfo{};
 	tg::DebugUI debugUI(window.getHandle());
 
 	tg::Shader basicShader("shaders/vertex.glsl", "shaders/fragment.glsl");
-
-	//std::vector<GLfloat> vertices = {
-	//	 0.0f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f,
-	//	 0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f,
-	//	-0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f
-	//};
 
 	struct Color {
 		uint8_t r;
@@ -32,55 +32,26 @@ int main() {
 		uint8_t a;
 	};
 
-	struct Vertex {
-		glm::vec3 position;
-		Color color;
-	};
-
-	std::vector<Vertex> vertices = {
-		{{0.5f, 0.5f, 0.0f},  {255, 0, 0}},
-		{{0.5f, -0.5f, 0.0f}, {0, 255, 0}},
-		{{-0.5f, -0.5f, 0.0f}, {0, 0, 255}},
-		{{-0.5f, 0.5f, 0.0f}, {255, 255, 0}},
+	std::vector<tg::Vertex> vertices = {
+		{{0.5f, 0.5f, 0.0f}},
+		{{0.5f, -0.5f, 0.0f}},
+		{{-0.5f, -0.5f, 0.0f}},
+		{{-0.5f, 0.5f, 0.0f}},
 	};
 
 	std::vector<GLuint> indices = {
 		0, 1, 2,
 		2, 3, 0
 	};
-
-	tg::VertexArray vao;
-	tg::VertexBuffer vbo(vertices);
-	tg::IndexBuffer ibo(indices);
-
-	GLsizei stride = sizeof(Vertex);
-	/*tg::VertexBufferLayout layout({
-		{ tg::VertexAttributeType::Float3, stride },
-		{ tg::VertexAttributeType::Float3, stride }
-	});*/
-
-	tg::VertexBufferLayout layout({
-		{ tg::VertexAttributeType::Float3, stride },
-		{ tg::VertexAttributeType::UByte4, stride, true }
-	});
-
-	vao.unbind();
-	vbo.unbind();
-	ibo.unbind();
+	
+	tg::Mesh mesh(vertices, indices);
 
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // Gray
 	//glClearColor(1.0f, 1.0f, 1.0, 1.0f); // White
 
-	glm::mat4 projection = glm::ortho(
-		static_cast<float>(0),
-		static_cast<float>(window.getWidth()), 
-		static_cast<float>(window.getHeight()),
-		static_cast<float>(0)
-	);
+	tg::Camera3D camera(&window, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0, 0, 1));
 
-	glm::mat4 view(1.0f);
-
-	glm::vec3 position(0.0f);
+	glm::vec3 position(0.0, 0.0, -400);
 	glm::mat4 model = glm::translate(glm::mat4(1.0), position);
 	model = glm::scale(model, glm::vec3(100, 100, 1));
 
@@ -88,7 +59,15 @@ int main() {
 
 	std::chrono::steady_clock::time_point start, end;
 
+	double frameCurrent = glfwGetTime();
+	double frameLast = frameCurrent;
+	double deltaTime = 0;
+
 	while (window.isOpen()) {
+		frameCurrent = glfwGetTime();
+		deltaTime = frameCurrent - frameLast;
+		frameLast = frameCurrent;
+
 		window.input().process();
 
 		while (std::optional event = window.input().pollEvent()) {
@@ -96,13 +75,7 @@ int main() {
 				window.setSize(windowResizeEvent->width, windowResizeEvent->height);
 				renderer.resizeViewport();
 
-				// Update projection to match the resized window
-				projection = glm::ortho(
-					static_cast<float>(0),
-					static_cast<float>(window.getWidth()),
-					static_cast<float>(window.getHeight()),
-					static_cast<float>(0)
-				);
+				camera.updateProjection();
 			}
 
 			if (auto keyEvent = event->getIf<tg::Event::KeyPressed>()) {
@@ -110,16 +83,9 @@ int main() {
 					window.close();
 				}
 			}
-
-			if (auto mouseEvent = event->getIf<tg::Event::MouseMoved>()) {
-				position.x = mouseEvent->x;
-				position.y = mouseEvent->y;
-				model = glm::translate(glm::mat4(1.0), position);
-				model = glm::scale(model, glm::vec3(100, 100, 1));
-			}
 		}
 
-		// Process input here
+		camera.processEvents(deltaTime);
 		debugUI.processKeyEvents(&window);
 
 		if (window.input().isKeyPressed(tg::Key::O)) {
@@ -133,6 +99,12 @@ int main() {
 			}
 		}
 
+		if (window.input().isKeyPressed(tg::Key::M)) {
+			cursorHidden = !cursorHidden;
+
+			window.setCursorHidden(cursorHidden);
+		}
+
 		window.input().update();
 
 		// Update here
@@ -143,11 +115,11 @@ int main() {
 
 		basicShader.use();
 
-		basicShader.setMat4("projection", projection);
-		basicShader.setMat4("view", view);
+		basicShader.setMat4("projection", camera.getProjection());
+		basicShader.setMat4("view", camera.getView());
 		basicShader.setMat4("model", model);
 
-		vao.bind();
+		mesh.bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)0);
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -155,6 +127,9 @@ int main() {
 
 		// Update debug info
 		debugInfo.frametimeMs = std::chrono::duration<double, std::milli>(end - start).count();
+		debugInfo.cameraPos = camera.getPosition();
+		debugInfo.cameraFront = camera.getFront();
+
 		debugUI.draw(debugInfo);
 
 		renderer.swapBuffers();

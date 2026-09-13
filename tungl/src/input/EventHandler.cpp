@@ -3,6 +3,8 @@
 
 namespace tg {
 	void EventHandler::init(GLFWwindow* handle) {
+		m_handle = handle;
+
 		glfwSetWindowUserPointer(handle, this);
 		glfwSetKeyCallback(handle, EventHandler::keyCallback);
 		glfwSetFramebufferSizeCallback(handle, EventHandler::framebufferSizeCallback);
@@ -12,6 +14,9 @@ namespace tg {
 	void EventHandler::process()
 	{
 		glfwPollEvents();
+
+		// Mouse position
+		glfwGetCursorPos(m_handle, &m_mousePosition.x, &m_mousePosition.y);
 	}
 
 	void EventHandler::update() {

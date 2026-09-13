@@ -27,20 +27,33 @@ namespace tg {
 			double x;
 			double y;
 		};
-
-#define EVENT_TYPES KeyPressed, KeyReleased, WindowResized, MouseMoved
+		
+		using EventType = std::variant<
+			KeyPressed, 
+			KeyReleased, 
+			WindowResized, 
+			MouseMoved
+		>;
 		// --- Events ---
 
-		template<class T, class... Ts>
-		constexpr static bool is_one_of_v = (std::is_same_v<T, Ts> || ...);
 
-		template<typename EventType>
+		template<typename T, typename Variant>
+		struct is_variant_alternative;
+
+		template<typename T, typename... Types>
+		struct is_variant_alternative<T, std::variant<Types...>> :
+			std::bool_constant<(std::is_same_v<T, Types> || ...)> {};
+
+		template<typename T, typename Variant>
+		static constexpr bool is_variant_alternative_v = is_variant_alternative<T, Variant>::value;
+
+		template<typename T>
 		constexpr static bool isValidEventType() {
-			return is_one_of_v<EventType, EVENT_TYPES>;
+			return is_variant_alternative_v<T, EventType>;
 		}
 
 	private:
-		std::variant<EVENT_TYPES> m_type;
+		EventType m_type;
 
 	public:
 		template <typename EventType>

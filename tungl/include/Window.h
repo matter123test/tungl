@@ -25,6 +25,10 @@ namespace tg {
 		void setSize(int width, int height) { m_width = width; m_height = height; }
 		void setWidth(int value) { m_width = value; }
 		void setHeight(int value) { m_height = value; }
+		
+		// This is required for first person cameras
+		void setCursorAtCenter();
+		void setCursorHidden(bool value);
 
 	private:
 		std::string m_title;

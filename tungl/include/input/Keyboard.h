@@ -9,7 +9,8 @@ namespace tg {
 		D,
 		I,
 		Escape,
-		O
+		O,
+		M
 	};
 
 	Key KeyFromGlfwKey(int glfwKey);

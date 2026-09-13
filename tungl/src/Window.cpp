@@ -68,6 +68,21 @@ namespace tg {
 		spdlog::info("Set window pos X: {} Y: {}", x, y);
 	}
 
+	void Window::setCursorAtCenter()
+	{
+		glfwSetCursorPos(m_handle, 0, 0);
+	}
+
+	void Window::setCursorHidden(bool value)
+	{
+		if (value) {
+			glfwSetInputMode(m_handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+		else {
+			glfwSetInputMode(m_handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+	}
+
 	void Window::center()
 	{
 		int monWidth, monHeight;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <optional>
 #include <unordered_map>
 #include <deque>
@@ -25,7 +26,13 @@ namespace tg {
 		bool isKeyPressed(Key key);
 		bool isKeyReleased(Key key);
 
+		double getMouseX() const { return m_mousePosition.x; }
+		double getMouseY() const { return m_mousePosition.y; }
+		glm::vec2 getMousePosition() const { return m_mousePosition; }
+
 	private:
+		GLFWwindow* m_handle;
+
 		std::deque<Event> m_events;
 
 		inline void addEvent(const Event& event) { m_events.push_front(event); }
@@ -33,7 +40,9 @@ namespace tg {
 
 		std::unordered_map<Key, bool> m_previousKeys{};
 		std::unordered_map<Key, bool> m_currentKeys{};
-	
+
+		glm::vec<2, double, glm::defaultp> m_mousePosition;
+
 		// Callbacks
 		static void keyCallback(GLFWwindow* handle, int keyCode, int scancode, int action, int mods);
 		static void framebufferSizeCallback(GLFWwindow* handle, int width, int height);

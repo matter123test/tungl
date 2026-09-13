@@ -35,7 +35,7 @@ namespace tg {
 		}
 	}
 
-	void DebugUI::draw(const DebugInfo& stats) const {
+	void DebugUI::draw(const DebugInfo& info) const {
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -47,14 +47,13 @@ namespace tg {
 			ImGui::SetNextWindowSize({ 300, 200 });
 			ImGui::Begin("Test", nullptr, ImGuiWindowFlags_NoDecoration);
 
-			ImGui::Text(std::format("Frametime: {:.2f}ms", stats.frametimeMs).c_str());
-			//ImGui::Text(std::format("Camera X: {:.2f} Y: {:.2f} Z: {:.2f}", stats.cameraPos.x, stats.cameraPos.y, stats.cameraPos.z).c_str());
-			//ImGui::Text(std::format("Target X: {:.2f} Y: {:.2f} Z: {:.2f}", stats.cameraFront.x, stats.cameraFront.y, stats.cameraFront.z).c_str());
-			//ImGui::Text(std::format("FPS: {}", stats.fps).c_str());
-			
+			ImGui::Text(std::format("Frametime: {:.2f}ms", info.frametimeMs).c_str());
+			ImGui::Text(std::format("Camera X: {:.1f} Y: {:.1f} Z: {:.1f}", info.cameraPos.x, info.cameraPos.y, info.cameraPos.z).c_str());
+			ImGui::Text(std::format("Front X: {:.1f} Y: {:.1f} Z: {:.1f}", info.cameraFront.x, info.cameraFront.y, info.cameraFront.z).c_str());
+
+
 			ImGui::End();
 		}
-		
 
 		// Rendering
 		ImGui::Render();

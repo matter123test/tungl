@@ -15,12 +15,12 @@ namespace tg {
 
 	class DebugUI {
 	public:
-		DebugUI(GLFWwindow *window_handler);
+		DebugUI(GLFWwindow* window_handler);
 		~DebugUI();
 
 		void processKeyEvents(Window* window);
-		void draw(const DebugInfo&stats) const;
-	
+		void draw(const DebugInfo& info) const;
+
 	private:
 		bool m_showDebugInfo = true;
 	};
