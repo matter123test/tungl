@@ -11,7 +11,7 @@ namespace tg {
 		m_vbo = std::make_unique<VertexBuffer>(vertices);
 		m_ibo = std::make_unique<IndexBuffer>(indices);
 
-		spdlog::info("Created mesh");
+		spdlog::info("Created mesh: sum({})", m_vao->getId() + m_vbo->getId() + m_ibo->getId());
 		spdlog::info("VAO: {}", m_vao->getId());
 		spdlog::info("VBO: {}", m_vbo->getId());
 		spdlog::info("IBO: {}", m_ibo->getId());

@@ -4,6 +4,7 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <spdlog/spdlog.h>
+#include <glad/glad.h>
 #include <format>
 
 namespace tg {
@@ -45,12 +46,23 @@ namespace tg {
 		if (m_showDebugInfo) {
 			ImGui::SetNextWindowPos({ 0, 0 });
 			ImGui::SetNextWindowSize({ 300, 200 });
-			ImGui::Begin("Test", nullptr, ImGuiWindowFlags_NoDecoration);
+			ImGui::Begin("Main", nullptr, ImGuiWindowFlags_NoDecoration);
 
+			ImGui::Text(std::format("FPS: {}", info.fps).c_str());
 			ImGui::Text(std::format("Frametime: {:.2f}ms", info.frametimeMs).c_str());
 			ImGui::Text(std::format("Camera X: {:.1f} Y: {:.1f} Z: {:.1f}", info.cameraPos.x, info.cameraPos.y, info.cameraPos.z).c_str());
 			ImGui::Text(std::format("Front X: {:.1f} Y: {:.1f} Z: {:.1f}", info.cameraFront.x, info.cameraFront.y, info.cameraFront.z).c_str());
 
+			if (ImGui::Checkbox("wireframe ", &info.isWireframe)) {
+				if (info.isWireframe) {
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				}
+				else {
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				}
+			}
+
+			ImGui::SliderFloat("speed", &info.cameraSpeed, 0.0f, 100.0f);
 
 			ImGui::End();
 		}

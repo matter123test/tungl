@@ -11,6 +11,9 @@ namespace tg {
 
 		glm::vec3 cameraPos;
 		glm::vec3 cameraFront;
+
+		mutable bool isWireframe;
+		mutable float cameraSpeed = 10.0f;
 	};
 
 	class DebugUI {

@@ -16,9 +16,12 @@ namespace tg {
 		// Getters
 		glm::vec3 getFront() const { return m_front; }
 
+		// Setters
+		void setSpeed(float value) { m_speed = value; }
+
 	private:
 		const glm::vec3 m_upDir = { 0.0f, 1.0f, 0.0f };
-		const float m_speed = 100.0f;
+		float m_speed = 10.0f;
 		const float m_sensitivity = 0.1f;
 		float m_fov = 45.0f;
 

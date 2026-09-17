@@ -12,6 +12,7 @@ target_sources(tungl PUBLIC "${SOURCE_FILES}" "${HEADER_FILES}")
 
 set("GLAD_DIR" "${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad")
 set("IMGUI_DIR" "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui")
+set("STB_IMAGE_DIR" "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image")
 
 target_sources(tungl PUBLIC
 	"${GLAD_DIR}/src/glad.c"
@@ -30,7 +31,10 @@ target_sources(tungl PUBLIC
     "${IMGUI_DIR}/backends/imgui_impl_glfw.cpp"
     "${IMGUI_DIR}/backends/imgui_impl_opengl3.h"
     "${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp"
+
+    "${STB_IMAGE_DIR}/stb_image.c"
 )
+
 target_include_directories(tungl PUBLIC 
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/"
 	"${GLAD_DIR}/include/"
@@ -38,6 +42,8 @@ target_include_directories(tungl PUBLIC
 	"${IMGUI_DIR}"
 	"${IMGUI_DIR}/backends"
 	"${IMGUI_DIR}/misc/cpp"
+
+    "${STB_IMAGE_DIR}/stb_image.h"
 )
 
 target_link_libraries(tungl PUBLIC winmm glfw spdlog::spdlog_header_only glm::glm)
