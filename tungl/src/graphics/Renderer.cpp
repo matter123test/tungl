@@ -16,6 +16,12 @@ namespace tg {
 		glDebugMessageCallback(GLDebugMessageCallback, NULL);
 #endif // _DEBUG
 		
+		glEnable(GL_DEPTH_TEST);
+
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // Gray
+		//glClearColor(1.0f, 1.0f, 1.0, 1.0f); // White
+
+
 		spdlog::info("Created renderer");
 
 		// Set viewport
@@ -25,6 +31,11 @@ namespace tg {
 	Renderer::~Renderer()
 	{
 		spdlog::info("Destroyed renderer");
+	}
+
+	void Renderer::clear() {
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void Renderer::swapBuffers()

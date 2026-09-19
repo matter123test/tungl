@@ -9,6 +9,7 @@ namespace tg {
 		Renderer(Window* window);
 		~Renderer();
 
+		void clear();
 		void swapBuffers();
 
 		// Resize the viewport to match the window dimensions
@@ -16,9 +17,9 @@ namespace tg {
 
 	private:
 		// Viewport size
-		int m_width;
-		int m_height;
+		int m_width = 0;
+		int m_height = 0;
 
-		Window* m_window;
+		Window* m_window = nullptr;
 	};
 }

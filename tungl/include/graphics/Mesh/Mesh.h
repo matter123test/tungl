@@ -14,6 +14,14 @@ namespace tg {
 		virtual void bind() const override;
 		virtual void unbind() const override;
 
+		Mesh(const Mesh&) = delete;
+		Mesh& operator=(const Mesh&) = delete;
+
+		Mesh(Mesh&&) noexcept = default;
+		Mesh& operator=(Mesh&&) noexcept = default;
+
+		inline int getIndicesCount() const { return m_indices.size(); }
+
 	private:
 		std::vector<Vertex> m_vertices;
 		std::vector<GLuint> m_indices;

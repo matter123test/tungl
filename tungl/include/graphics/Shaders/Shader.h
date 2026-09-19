@@ -35,8 +35,6 @@ namespace tg {
 		TODO:
 		setMat3
 		setVec2
-		setVec3
-		setVec4
 		*/
 
 	private:

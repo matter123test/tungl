@@ -11,14 +11,9 @@
 #include "gui/DebugUI.h"
 #include "graphics/Mesh/Mesh.h"
 #include "game/Camera/Camera3D.h"
-
-#include <stb_image.h>
-#include <string_view>
-#include <filesystem>
-
-#include "graphics/Buffers/Buffer.h"
 #include "graphics/glDebug.h"
 #include "graphics/Texture/Texture2D.h"
+#include "graphics/Model/Model.h"
 
 
 int main() {
@@ -40,7 +35,9 @@ int main() {
 	tg::DebugInfo debugInfo{};
 	tg::DebugUI debugUI(window.getHandle());
 
-	//tg::Shader basicShader("shaders/shading/texture_uv/vertex.glsl", "shaders/shading/texture_uv/fragment.glsl");
+	tg::Shader normalsShader("shaders/shading/normals/vertex.glsl", "shaders/shading/normals/fragment.glsl");
+	tg::Shader textureUVShader("shaders/shading/texture_uv/vertex.glsl", "shaders/shading/texture_uv/fragment.glsl");
+
 	tg::Shader basicShader("shaders/textured/multi/vertex.glsl", "shaders/textured/multi/fragment.glsl");
 
 	struct Color {
@@ -64,13 +61,13 @@ int main() {
 
 	tg::Mesh mesh(vertices, indices);
 
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // Gray
-	//glClearColor(1.0f, 1.0f, 1.0, 1.0f); // White
-
 	tg::Texture2D texture2DA("textures/feet_29.jpg");
 	tg::Texture2D texture2DB("textures/ksp_flag.jpg");
 
 	tg::Camera3D camera(&window, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0, 0, 1));
+
+	tg::Model cubeModel("models/cube.obj");
+	//tg::Model cubeModel(R"(C:\Users\dust\Desktop\oldTungGl\resources\models\triple_t\Tung Tung Tung Sahur.glb)");
 
 	glm::vec3 position(0.0, 0.0, -5);
 	glm::mat4 model = glm::translate(glm::mat4(1.0), position);
@@ -121,7 +118,7 @@ int main() {
 
 		// Render here
 		start = std::chrono::steady_clock::now();
-		glClear(GL_COLOR_BUFFER_BIT);
+		renderer.clear();
 
 		basicShader.use();
 
@@ -140,6 +137,8 @@ int main() {
 		mesh.bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)0);
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		cubeModel.debugDraw(textureUVShader, camera);
 
 		end = std::chrono::steady_clock::now();
 
