@@ -5,13 +5,13 @@
 
 #ifdef _DEBUG
 
-#define DEBUG_ONLY(x) x
-#define TG_ASSERT(x) if (x) __debugbreak();
+#define TG_CORE_DEBUG_ONLY(x) x
+#define TG_CORE_ASSERT(x) if (!(x)) __debugbreak();
 
 #else
 
-#define DEBUG_ONLY(x) ;
-#define TG_ASSERT(x) ;
+#define TG_CORE_DEBUG_ONLY(x) ;
+#define TG_CORE_ASSERT(x) ;
 
 #endif
 

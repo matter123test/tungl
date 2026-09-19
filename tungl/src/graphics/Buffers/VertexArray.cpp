@@ -19,7 +19,7 @@ namespace tg {
 
 	void VertexArray::bind() const
 	{
-		TG_ASSERT(m_id == 0); // Invalid vertex array id
+		TG_CORE_ASSERT(m_id != 0); // Invalid vertex array id
 		glBindVertexArray(m_id);
 	}
 	

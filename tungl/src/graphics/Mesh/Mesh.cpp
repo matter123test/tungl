@@ -11,7 +11,9 @@ namespace tg {
 		m_vbo = std::make_unique<VertexBuffer>(vertices);
 		m_ibo = std::make_unique<IndexBuffer>(indices);
 
-		spdlog::info("Created mesh: sum({})", m_vao->getId() + m_vbo->getId() + m_ibo->getId());
+		// TODO: add a unique mesh id
+		m_id = m_vao->getId() + m_vbo->getId() + m_ibo->getId();
+		spdlog::info("Created mesh id: {}", m_id);
 		spdlog::info("VAO: {}", m_vao->getId());
 		spdlog::info("VBO: {}", m_vbo->getId());
 		spdlog::info("IBO: {}", m_ibo->getId());
@@ -23,8 +25,6 @@ namespace tg {
 			{ VertexAttributeType::Float2, stride },
 		});
 
-		// TODO: add a unique mesh id
-
 		printFooter("Mesh Creation");
 	}
 
@@ -34,7 +34,7 @@ namespace tg {
 		m_vbo.reset();
 		m_ibo.reset();
 
-		spdlog::info("Destroyed mesh");
+		spdlog::info("Destroyed mesh id: {}", m_id);
 	}
 
 	void Mesh::bind() const {

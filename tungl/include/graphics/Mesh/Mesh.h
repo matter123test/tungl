@@ -6,13 +6,13 @@
 #include <memory>
 
 namespace tg {
-	class Mesh {
+	class Mesh : Buffer {
 	public:
 		Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices);
 		~Mesh();
 
-		void bind() const;
-		void unbind() const;
+		virtual void bind() const override;
+		virtual void unbind() const override;
 
 	private:
 		std::vector<Vertex> m_vertices;

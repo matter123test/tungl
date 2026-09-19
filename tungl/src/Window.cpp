@@ -3,13 +3,22 @@
 
 #ifdef _WIN32
 #include <timeapi.h>
+
+#define timeBeginPeriod() timeBeginPeriod(1)
+#define timeEndPeriod() timeEndPeriod(1)
+
+#else
+
+#define timeBeginPeriod() ;
+#define timeEndPeriod() ;
+
 #endif // _WIN32
 
 namespace tg {
 	Window::Window(const std::string& title, int width, int height) :
 		m_title(title), m_width(width), m_height(height)
 	{
-		timeBeginPeriod(1); // TODO
+		timeBeginPeriod(1);
 
 		if (!glfwInit()) {
 			spdlog::error("Failed to initialize GLFW");

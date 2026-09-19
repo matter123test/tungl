@@ -11,7 +11,7 @@ namespace tg {
 
 	void VertexBuffer::bind() const
 	{
-		TG_ASSERT(m_id == 0); // Invalid id
+		TG_CORE_ASSERT(m_id != 0); // Invalid id
 		glBindBuffer(GL_ARRAY_BUFFER, m_id);
 	}
 

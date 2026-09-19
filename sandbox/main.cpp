@@ -15,74 +15,11 @@
 #include <stb_image.h>
 #include <string_view>
 #include <filesystem>
-#include <graphics/Buffers/Buffer.h>
-#include <graphics/glDebug.h>
 
-class Texture : public tg::Buffer {
-public:
-	Texture(std::string_view filePath) : m_path(filePath) {
-		if (!std::filesystem::exists(filePath)) {
-			spdlog::error("File: {} does not exist", filePath);
-			return;
-		}
+#include "graphics/Buffers/Buffer.h"
+#include "graphics/glDebug.h"
+#include "graphics/Texture/Texture2D.h"
 
-		int nChannels;
-
-		stbi_set_flip_vertically_on_load(true);
-		m_data = stbi_load(filePath.data(), &m_width, &m_height, &nChannels, 0);
-
-		if (!m_data) {
-			spdlog::error("Failed to load image: {}", filePath);
-			return;
-		}
-
-		glGenTextures(1, &m_id);
-		spdlog::info("Created texture id: {} file: {}", m_id, m_path);
-	}
-
-	~Texture() {
-		spdlog::info("Destroyed texture id: {} file: {}", m_id, m_path);
-
-		glDeleteTextures(1, &m_id);
-	}
-
-protected:
-	int m_width = 0;
-	int m_height = 0;
-
-	uint8_t* m_data = nullptr;
-
-	std::string_view m_path;
-};
-
-class Texture2D : public Texture {
-public:
-	Texture2D(std::string_view filePath) : Texture(filePath) {
-		glBindTexture(GL_TEXTURE_2D, m_id);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB,
-			GL_UNSIGNED_BYTE, m_data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		stbi_image_free(m_data);
-
-		Texture2D::unbind();
-	}
-
-	~Texture2D() = default;
-
-	// Inherited via tg::Buffer
-	void bind() const override
-	{
-		TG_ASSERT(m_id == 0);
-		glBindTexture(GL_TEXTURE_2D, m_id);
-	}
-
-	void unbind() const override
-	{
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-};
 
 int main() {
 #ifdef _DEBUG
@@ -103,6 +40,7 @@ int main() {
 	tg::DebugInfo debugInfo{};
 	tg::DebugUI debugUI(window.getHandle());
 
+	//tg::Shader basicShader("shaders/shading/texture_uv/vertex.glsl", "shaders/shading/texture_uv/fragment.glsl");
 	tg::Shader basicShader("shaders/textured/multi/vertex.glsl", "shaders/textured/multi/fragment.glsl");
 
 	struct Color {
@@ -129,8 +67,8 @@ int main() {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // Gray
 	//glClearColor(1.0f, 1.0f, 1.0, 1.0f); // White
 
-	Texture2D texture2DA("textures/feet_29.jpg");
-	Texture2D texture2DB("textures/ksp_flag.jpg");
+	tg::Texture2D texture2DA("textures/feet_29.jpg");
+	tg::Texture2D texture2DB("textures/ksp_flag.jpg");
 
 	tg::Camera3D camera(&window, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0, 0, 1));
 
@@ -212,12 +150,13 @@ int main() {
 		if (elapsedTime >= 0.5f) {
 			//spdlog::info("fps: {}", frameCount / elapsedTime);
 			debugInfo.fps = frameCount / elapsedTime;
+			debugInfo.frametimeMs = std::chrono::duration<double, std::milli>(end - start).count();
+
 			elapsedTime = 0;
 			frameCount = 0;
 		}
 
 		// Update debug info
-		debugInfo.frametimeMs = std::chrono::duration<double, std::milli>(end - start).count();
 		debugInfo.cameraPos = camera.getPosition();
 		debugInfo.cameraFront = camera.getFront();
 

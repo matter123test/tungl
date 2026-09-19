@@ -18,7 +18,7 @@ namespace tg {
 
 	void IndexBuffer::bind() const
 	{
-		TG_ASSERT(m_id == 0) // Invalid id
+		TG_CORE_ASSERT(m_id != 0) // Invalid id
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 	}
 

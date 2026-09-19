@@ -1,6 +1,7 @@
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
 
 file(GLOB_RECURSE "SOURCE_FILES" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB_RECURSE "HEADER_FILES" "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
@@ -46,5 +47,6 @@ target_include_directories(tungl PUBLIC
     "${STB_IMAGE_DIR}/stb_image.h"
 )
 
-target_link_libraries(tungl PUBLIC winmm glfw spdlog::spdlog_header_only glm::glm)
+
+target_link_libraries(tungl PUBLIC winmm glfw spdlog::spdlog_header_only glm::glm assimp::assimp)
 target_compile_definitions(tungl PUBLIC GLFW_INCLUDE_NONE)

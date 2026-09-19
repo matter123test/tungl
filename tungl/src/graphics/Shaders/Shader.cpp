@@ -136,7 +136,7 @@ namespace tg {
 			GLint location = glGetUniformLocation(m_programId, name.c_str());
 			m_uniformCache[name] = location;
 			
-			DEBUG_ONLY(
+			TG_CORE_DEBUG_ONLY(
 				if (location < 0) {
 					spdlog::warn("Ignored uniform {} (returned: {})", name, location);
 				}
