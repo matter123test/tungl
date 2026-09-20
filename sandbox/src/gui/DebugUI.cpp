@@ -7,7 +7,7 @@
 #include <glad/glad.h>
 #include <format>
 
-namespace tg {
+namespace sandbox {
 	DebugUI::DebugUI(GLFWwindow *window_handler) {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -29,12 +29,15 @@ namespace tg {
 		spdlog::info("Destroyed DebugUI");
 	}
 
-	void DebugUI::processKeyEvents(Window* window)
+	void DebugUI::processKeyEvents(tg::Window* window)
 	{
-		if (window->input().isKeyPressed(Key::I)) {
+		if (window->input().isKeyPressed(tg::Key::I)) {
 			m_showDebugInfo = !m_showDebugInfo;
 		}
 	}
+
+	const char* items[] = {"Basic", "Texture UV", "Normals"};
+	int currentItemIndex = 0;
 
 	void DebugUI::draw(const DebugInfo& info) const {
 		// Start the Dear ImGui frame
@@ -62,7 +65,13 @@ namespace tg {
 				}
 			}
 
-			ImGui::SliderFloat("speed", &info.cameraSpeed, 0.0f, 100.0f);
+			if (ImGui::SliderFloat("speed", &info.cameraSpeed, 0.0f, 100.0f)) {
+				info.changeCameraSpeed(info.cameraSpeed);
+			}
+
+			if (ImGui::Combo("Shading", &currentItemIndex, items, 3)) {
+				spdlog::info("Item: {}", items[currentItemIndex]);
+			}
 
 			ImGui::End();
 		}

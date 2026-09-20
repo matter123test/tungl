@@ -81,7 +81,7 @@ namespace tg {
 		inputHandler->addEvent(Event(Event::MouseMoved(xpos, ypos)));
 	}
 
-	bool EventHandler::isKeyDown(Key key) {
+	bool EventHandler::isKeyDown(Key key) const {
 		auto search = m_currentKeys.find(key);
 
 		if (search != m_currentKeys.end()) {
@@ -91,7 +91,7 @@ namespace tg {
 		return false;
 	}
 
-	bool EventHandler::isKeyPressed(Key key) {
+	bool EventHandler::isKeyPressed(Key key) const {
 		auto searchCurrent = m_currentKeys.find(key);
 		if (searchCurrent == m_currentKeys.end()) return false;
 
@@ -105,7 +105,7 @@ namespace tg {
 		return false;
 	}
 
-	bool EventHandler::isKeyReleased(Key key) {
+	bool EventHandler::isKeyReleased(Key key) const {
 		auto search = m_currentKeys.find(key);
 
 		if (search != m_currentKeys.end()) {

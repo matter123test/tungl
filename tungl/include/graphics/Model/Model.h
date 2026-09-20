@@ -9,7 +9,7 @@
 #include <assimp/postprocess.h>     // Post processing flags
 
 #include "graphics/Shaders/Shader.h"
-#include "game/Camera/Camera3D.h"
+#include "game/Camera/Camera.h"
 
 namespace tg {
 	class Model {
@@ -18,7 +18,7 @@ namespace tg {
 		~Model();
 
 		// TODO: remove
-		void debugDraw(const Shader& shader, const Camera3D &camera);
+		void debugDraw(const Shader& shader, const Camera &camera);
 
 	private:
 		std::string_view m_path;

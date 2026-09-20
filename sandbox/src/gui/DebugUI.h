@@ -3,8 +3,9 @@
 #include "Window.h"
 #include <glfw/glfw3.h>
 #include <glm/glm.hpp>
+#include <functional>
 
-namespace tg {
+namespace sandbox {
 	struct DebugInfo {
 		double frametimeMs;
 		int fps;
@@ -14,6 +15,8 @@ namespace tg {
 
 		mutable bool isWireframe;
 		mutable float cameraSpeed = 10.0f;
+
+		std::function<void(float)> changeCameraSpeed;
 	};
 
 	class DebugUI {
@@ -21,7 +24,7 @@ namespace tg {
 		DebugUI(GLFWwindow* window_handler);
 		~DebugUI();
 
-		void processKeyEvents(Window* window);
+		void processKeyEvents(tg::Window* window);
 		void draw(const DebugInfo& info) const;
 
 	private:

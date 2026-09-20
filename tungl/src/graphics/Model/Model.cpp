@@ -27,12 +27,12 @@ namespace tg {
 		spdlog::info("Unloaded model: {}", m_path);
 	}
 
-	void Model::debugDraw(const Shader& shader, const Camera3D& camera)
+	void Model::debugDraw(const Shader& shader, const Camera& camera)
 	{
 		shader.use();
 
-		shader.setMat4("projection", camera.getProjection());
-		shader.setMat4("view", camera.getView());
+		shader.setMat4("projection", camera.m_Projection);
+		shader.setMat4("view", camera.m_View);
 
 		for (const auto& mesh : m_meshes) {
 			shader.setMat4("model", glm::mat4(1.0f));

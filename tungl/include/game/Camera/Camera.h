@@ -1,31 +1,55 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "input/EventHandler.h"
 #include "Window.h"
 
 namespace tg {
-	class Camera {
+	// Default camera values
+	inline const float YAW = -90.0f;
+	inline const float PITCH = 0.0f;
+	inline const float SPEED = 2.5f;
+	inline const float SENSITIVITY = 0.1f;
+	inline const float ZOOM = 45.0f;
+
+	class Camera
+	{
 	public:
-		Camera(Window* window, const glm::vec3& position) : m_window(window), m_position(position) {}
-		virtual ~Camera() = default;
+		glm::vec3 m_Position;
+		glm::vec3 m_Front;
+		glm::vec3 m_Up;
+		glm::vec3 m_Right;
+		glm::vec3 m_WorldUp;
 
-		virtual void processEvents(double deltaTime) = 0;
+		glm::mat4 m_Projection;
+		glm::mat4 m_View;
+
+		// Angles
+		float m_Yaw;
+		float m_Pitch;
+
+		// Options
+		float m_MovementSpeed;
+		float m_MouseSensitivity;
+		float m_Zoom;
+
+		Camera(
+			glm::vec3 position = glm::vec3(0.0f),
+			glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+			float yaw = YAW,
+			float pitch = PITCH
+		);
+		~Camera() = default;
+
+		void processMouseMovedEvent(const Event::MouseMoved& event);
+		void processKeyPressedEvent(const EventHandler &handler, double deltaTime);
 		
-		// If the window size is changed
-		virtual void updateProjection() = 0;
-		virtual void updateView() = 0;
+		void updateProjection(const Window &window);
 
-		// Getters
-		glm::vec3 getPosition() const { return m_position; }
-		glm::mat4 getProjection() const { return m_projection; }
-		glm::mat4 getView() const { return m_view; }
+	private:
+		float m_oldMouseX = 0.0f;
+		float m_oldMouseY = 0.0f;
 
-	protected:
-		glm::mat4 m_projection = glm::mat4(1.0f);
-		glm::mat4 m_view = glm::mat4(1.0f);
-
-		glm::vec3 m_position = glm::vec3(0.0f);
-
-		Window* m_window;
+		void updateVectors();
 	};
 }

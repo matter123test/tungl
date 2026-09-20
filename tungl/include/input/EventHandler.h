@@ -22,9 +22,9 @@ namespace tg {
 		// Get events until the queue is empty
 		std::optional<Event> pollEvent();
 
-		bool isKeyDown(Key key);
-		bool isKeyPressed(Key key);
-		bool isKeyReleased(Key key);
+		bool isKeyDown(Key key) const;
+		bool isKeyPressed(Key key) const;
+		bool isKeyReleased(Key key) const;
 
 		double getMouseX() const { return m_mousePosition.x; }
 		double getMouseY() const { return m_mousePosition.y; }
