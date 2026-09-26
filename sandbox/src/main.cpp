@@ -33,6 +33,7 @@ int main() {
 	window.setCursorHidden(cursorHidden);
 
 	sandbox::DebugInfo debugInfo{};
+
 	sandbox::DebugUI debugUI(window.getHandle());
 
 	tg::Shader normalsShader("shaders/shading/normals/vertex.glsl", "shaders/shading/normals/fragment.glsl");
@@ -64,9 +65,8 @@ int main() {
 	tg::Texture2D texture2DA("textures/feet_29.jpg");
 	tg::Texture2D texture2DB("textures/ksp_flag.jpg");
 
-	tg::Camera camera(glm::vec3(0.0));
-	camera.m_Front = glm::vec3(0.0, 0.0, -5);
-	// TODO: fix //tg::Camera3D camera(&window, glm::vec3(-0.5f, 2.7, 3.3), glm::vec3(0.6, -0.4, -0.7)); strange camera rotation
+	tg::Camera camera(glm::vec3(-3.7, 2.8, 3.1));
+	camera.lookAt(glm::vec3(0.5, -0.4, -0.7));
 
 	tg::Model cubeModel("models/cube.obj");
 	//tg::Model cubeModel(R"(C:\Users\dust\Desktop\oldTungGl\resources\models\triple_t\Tung Tung Tung Sahur.glb)");
@@ -84,11 +84,11 @@ int main() {
 	double elapsedTime = 0.0;
 	int frameCount = 0;
 
-	std::function<void(float)> changeCameraSpeed = [&](float speed) {
+	std::function<void(float)> changeSpeedFunction = [&](float speed) {
 		camera.m_MovementSpeed = speed;
 	};
 
-	debugInfo.changeCameraSpeed = changeCameraSpeed;
+	debugInfo.cameraInfo.changeSpeedFunction = changeSpeedFunction;
 
 	camera.updateProjection(window);
 
@@ -171,8 +171,10 @@ int main() {
 		}
 
 		// Update debug info
-		debugInfo.cameraPos = camera.m_Position;
-		debugInfo.cameraFront = camera.m_Front;
+		debugInfo.cameraInfo.position = camera.m_Position;
+		debugInfo.cameraInfo.direction = camera.m_Front;
+		debugInfo.cameraInfo.yaw = camera.m_Yaw;
+		debugInfo.cameraInfo.pitch = camera.m_Pitch;
 
 		//camera.setSpeed(debugInfo.cameraSpeed);
 		debugUI.draw(debugInfo);

@@ -53,8 +53,11 @@ namespace sandbox {
 
 			ImGui::Text(std::format("FPS: {}", info.fps).c_str());
 			ImGui::Text(std::format("Frametime: {:.2f}ms", info.frametimeMs).c_str());
-			ImGui::Text(std::format("Camera X: {:.1f} Y: {:.1f} Z: {:.1f}", info.cameraPos.x, info.cameraPos.y, info.cameraPos.z).c_str());
-			ImGui::Text(std::format("Front X: {:.1f} Y: {:.1f} Z: {:.1f}", info.cameraFront.x, info.cameraFront.y, info.cameraFront.z).c_str());
+			
+			ImGui::Text(std::format("Camera X: {:.1f} Y: {:.1f} Z: {:.1f}", info.cameraInfo.position.x, info.cameraInfo.position.y, info.cameraInfo.position.z).c_str());
+			ImGui::Text(std::format("Front X: {:.1f} Y: {:.1f} Z: {:.1f}", info.cameraInfo.direction.x, info.cameraInfo.direction.y, info.cameraInfo.direction.z).c_str());
+			ImGui::Text(std::format("Yaw: {}", info.cameraInfo.yaw).c_str());
+			ImGui::Text(std::format("Pitch: {}", info.cameraInfo.pitch).c_str());
 
 			if (ImGui::Checkbox("wireframe ", &info.isWireframe)) {
 				if (info.isWireframe) {
@@ -65,10 +68,11 @@ namespace sandbox {
 				}
 			}
 
-			if (ImGui::SliderFloat("speed", &info.cameraSpeed, 0.0f, 100.0f)) {
-				info.changeCameraSpeed(info.cameraSpeed);
+			if (ImGui::SliderFloat("speed", &info.cameraInfo.speed, 0.0f, 100.0f)) {
+				info.cameraInfo.changeSpeedFunction(info.cameraInfo.speed);
 			}
 
+			// TODO: add functionality
 			if (ImGui::Combo("Shading", &currentItemIndex, items, 3)) {
 				spdlog::info("Item: {}", items[currentItemIndex]);
 			}

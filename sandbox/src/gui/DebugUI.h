@@ -6,17 +6,23 @@
 #include <functional>
 
 namespace sandbox {
+	struct DebugCameraInfo {
+		glm::vec3 position;
+		glm::vec3 direction;
+		mutable float yaw;
+		mutable float pitch;
+	
+		mutable float speed = 10.0f;
+		std::function<void(float)> changeSpeedFunction;
+	};
+
 	struct DebugInfo {
 		double frametimeMs;
 		int fps;
 
-		glm::vec3 cameraPos;
-		glm::vec3 cameraFront;
+		DebugCameraInfo cameraInfo{};
 
 		mutable bool isWireframe;
-		mutable float cameraSpeed = 10.0f;
-
-		std::function<void(float)> changeCameraSpeed;
 	};
 
 	class DebugUI {

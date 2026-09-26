@@ -57,6 +57,16 @@ namespace tg {
 		);
 	}
 
+	void Camera::lookAt(const glm::vec3& position)
+	{
+		glm::vec3 dir = glm::normalize(position);
+
+		m_Pitch = glm::degrees(std::asin(dir.y));
+		m_Yaw = glm::degrees(std::atan2(dir.z, dir.x));
+
+		updateVectors();
+	}
+
 	void Camera::updateVectors()
 	{
 		// calculate the new Front vector

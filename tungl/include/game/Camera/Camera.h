@@ -46,10 +46,14 @@ namespace tg {
 		
 		void updateProjection(const Window &window);
 
+		// Look at a 3d position
+		void lookAt(const glm::vec3 &position);
+
 	private:
 		float m_oldMouseX = 0.0f;
 		float m_oldMouseY = 0.0f;
 
+		// Call this after modifying camera vectors
 		void updateVectors();
 	};
 }
